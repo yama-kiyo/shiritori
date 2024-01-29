@@ -1,7 +1,13 @@
-from flask import Flask, request, jsonify, render_template
-import openai
-import os
 import traceback
+import os
+import openai
+from flask import Flask, request, jsonify, render_template
+
+# 環境変数からAPIキーを取得
+api_key = os.environ.get("OPENAI_API_KEY")
+
+# APIキーを設定
+openai.api_key = api_key
 
 app = Flask(__name__)
 
@@ -59,30 +65,25 @@ def adjust_last_character(word):
         else:
             return last_char
             
-def generate_shiritori_response(prompt):
+def generate_shiritori_response(user_input):
     try:
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
-        {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": prompt}
-    ]
-)
-        if response is None or not response.choices:
-            error_message = "Error: 応答が空です"
-            print(error_message)
-            return jsonify({"status": "error", "message": error_message}), 500
-
-        response_text = response.choices[0].message['content'].strip()
-        if not response_text:
-            error_message = "Error: 応答テキストが空です"
-            print(error_message)
-            return jsonify({"status": "error", "message": error_message}), 500
-
+                {
+                    "role": "system",
+                    "content": "You are a helpful assistant playing shiritori with a user. Respond with a valid shiritori word."
+                },
+                {
+                    "role": "user",
+                    "content": user_input
+                }
+            ]
+        )
+        response_text = response['choices'][0]['message']['content'].strip()
         return response_text
     except Exception as e:
         print(f"Error: {e}")
-        traceback.print_exc()
         return None
 
 @app.route('/')
