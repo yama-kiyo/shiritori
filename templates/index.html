@@ -27,6 +27,7 @@
     <input type="text" id="wordInput" placeholder="ここに単語を入力">
     <button id="playButton">プレイ</button>
     <button id="aiPlayButton">AIとしりとりする</button>
+       <button id="resetButton">リセット</button> <!-- リセットボタンを追加 -->
     <div id="gameResult"></div>
 
     <script>
@@ -68,6 +69,19 @@
                 } else {
                     alert(data.message);
                 }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        };
+
+        document.getElementById("resetButton").onclick = function() {
+            fetch('/reset', { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                document.getElementById("gameResult").innerText = '';
+                document.getElementById("wordInput").value = '';
             })
             .catch((error) => {
                 console.error('Error:', error);
