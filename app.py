@@ -66,7 +66,7 @@ def generate_shiritori_response(user_input):
     last_char = adjust_last_character(katakana_to_hiragana(user_input))[-1]
 
     # しりとりのプロンプトを作成
-    prompt = f"次のしりとりの単語を「{last_char}」から始めてください。ひらがなとカタカナで名詞のみ使用してください。"
+    prompt = f"次のしりとりの単語を「{last_char}」から始めてください。ひらがなとカタカナで名詞のみ使用してください。答えは一つだけにしてください。最後に「ん」がつく単語は禁止です。もし最後に「ん」がつく単語しかなかったらあなたの負けなので「うわー、まけた！」と宣言してください。"
 
     try:
         # OpenAI APIリクエスト
