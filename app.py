@@ -1,9 +1,13 @@
-import openai
+from openai import OpenAI
 import traceback
 import os
 from flask import Flask, request, jsonify, render_template
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+client = OpenAI(
+    # This is the default and can be omitted
+api_key=os.environ.get("OPENAI_API_KEY"),
+)
+    ## openai.api_key = os.getenv("OPENAI_API_KEY") ##
 app = Flask(__name__)
 
 words_played = []
@@ -66,7 +70,7 @@ def generate_shiritori_response(user_input):
 
     try:
         # OpenAI APIリクエスト
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
