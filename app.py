@@ -3,9 +3,7 @@ import traceback
 import os
 from flask import Flask, request, jsonify, render_template
 
-client = OpenAI(
-  api_key=os.environ['OPENAI_API_KEY'],  # this is also the default, it can be omitted
-)
+openai.api_key = os.getenv("OPENAI_API_KEY")
 app = Flask(__name__)
 
 words_played = []
