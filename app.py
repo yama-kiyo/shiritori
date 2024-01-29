@@ -1,7 +1,7 @@
+import openai
 import traceback
 import os
 from flask import Flask, request, jsonify, render_template
-from openai import OpenAI
 
 client = OpenAI(
   api_key=os.environ['OPENAI_API_KEY'],  # this is also the default, it can be omitted
@@ -60,21 +60,21 @@ def adjust_last_character(word):
             return last_char
             
 def generate_shiritori_response(user_input):
+    # ユーザーの入力単語の最後の文字を取得
+    last_char = user_input[-1]
+
+    # しりとりのプロンプトを作成
+    prompt = f"次のしりとりの単語を「{last_char}」から始めてください。"
+
     try:
-        completion = client.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {
-                    "role": "system",
-                    "content": "You are a helpful assistant playing shiritori with a user. Respond with a valid shiritori word."
-                },
-                {
-                    "role": "user",
-                    "content": user_input
-                }
-            ]
+        # OpenAI APIリクエスト
+        response = openai.Completion.create(
+            engine="davinci",
+            prompt=prompt,
+            max_tokens=50
         )
-        response_text = response['choices'][0]['message']['content'].strip()
+        # 応答からテキストを取得
+        response_text = response.choices[0].text.strip()
         return response_text
     except Exception as e:
         print(f"Error: {e}")
