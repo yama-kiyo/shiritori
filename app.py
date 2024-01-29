@@ -59,7 +59,7 @@ def adjust_last_character(word):
             
 def generate_shiritori_response(user_input):
     # ユーザーの入力単語の最後の文字を取得
-    last_char = user_input[-1]
+    last_char = adjust_last_character(katakana_to_hiragana(user_input))[-1]
 
     # しりとりのプロンプトを作成
     prompt = f"次のしりとりの単語を「{last_char}」から始めてください。"
@@ -67,18 +67,18 @@ def generate_shiritori_response(user_input):
     try:
         # OpenAI APIリクエスト
         response = openai.ChatCompletion.create(
-    model="gpt-3.5-turbo",
-    messages=[
-        {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": user_input}
-    ]
-)
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": prompt}
+            ]
+        )
         # 応答からテキストを取得
-        response_text = response.choices[0].text.strip()
+        response_text = response.choices[0].message['content'].strip()
         return response_text
     except Exception as e:
         print(f"Error: {e}")
-        traceback.print_exc()  # スタックトレースを出力
+        traceback.print_exc()
         return None
 
 @app.route('/')
@@ -112,14 +112,13 @@ def play():
 @app.route('/ai_play', methods=['POST'])
 def ai_play():
     user_word = request.json.get('word')
-    prompt = f"しりとり: {user_word}、"
-    
-    ai_response = generate_shiritori_response(prompt)
+    ai_response = generate_shiritori_response(user_word)
     
     if ai_response:
         return jsonify({"status": "success", "message": ai_response})
     else:
         return jsonify({"status": "error", "message": "AIからの応答がありませんでした。"})
+
 
 @app.route('/reset', methods=['POST'])
 def reset():
