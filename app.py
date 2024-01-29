@@ -66,7 +66,7 @@ def generate_shiritori_response(user_input):
     last_char = adjust_last_character(katakana_to_hiragana(user_input))[-1]
 
     # しりとりのプロンプトを作成
-    prompt = f"次のしりとりの単語を「{last_char}」から始めてください。"
+    prompt = f"次のしりとりの単語を「{last_char}」から始めてください。ひらがなとカタカナで名詞のみ使用してください。"
 
     try:
         # OpenAI APIリクエスト
@@ -109,9 +109,9 @@ def play():
                 words_played.append(word)
                 return jsonify({"status": "success", "message": "OK"})
             else:
-                return jsonify({"status": "error", "message": "この単語は既に使われています。"})
+                return jsonify({"status": "error", "message": "もうでたよ！"})
         else:
-            return jsonify({"status": "error", "message": "前の単語の最後の文字と一致しません。"})
+            return jsonify({"status": "error", "message": "最後の文字とちがうよ！"})
 
 @app.route('/ai_play', methods=['POST'])
 def ai_play():
@@ -121,7 +121,7 @@ def ai_play():
     if ai_response:
         return jsonify({"status": "success", "message": ai_response})
     else:
-        return jsonify({"status": "error", "message": "AIからの応答がありませんでした。"})
+        return jsonify({"status": "error", "message": "AIはもう寝てるってさ。"})
 
 
 @app.route('/reset', methods=['POST'])
