@@ -14,23 +14,51 @@ def katakana_to_hiragana(word):
     return "".join(chr(ord(char) - 96) if "ァ" <= char <= "ン" else char for char in word)
 
 def adjust_last_character(word):
-    if word[-1] == 'ー':
-        last_char = word[-2]
-    else:
-        last_char = word[-1]
+  # 子音と母音の変換ルール
+    consonant_to_vowel = {
+        'か': 'あ', 'き': 'い', 'く': 'う', 'け': 'え', 'こ': 'お',
+        'さ': 'あ', 'し': 'い', 'す': 'う', 'せ': 'え', 'そ': 'お',
+        'た': 'あ', 'ち': 'い', 'つ': 'う', 'て': 'え', 'と': 'お',
+        'な': 'あ', 'に': 'い', 'ぬ': 'う', 'ね': 'え', 'の': 'お',
+        'は': 'あ', 'ひ': 'い', 'ふ': 'う', 'へ': 'え', 'ほ': 'お',
+        'ま': 'あ', 'み': 'い', 'む': 'う', 'め': 'え', 'も': 'お',
+        'や': 'あ', 'ゆ': 'う', 'よ': 'お',
+        'ら': 'あ', 'り': 'い', 'る': 'う', 'れ': 'え', 'ろ': 'お',
+        'わ': 'あ', 'を': 'お',
+        'が': 'あ', 'ぎ': 'い', 'ぐ': 'う', 'げ': 'え', 'ご': 'お',
+        'ざ': 'あ', 'じ': 'い', 'ず': 'う', 'ぜ': 'え', 'ぞ': 'お',
+        'だ': 'あ', 'ぢ': 'い', 'づ': 'う', 'で': 'え', 'ど': 'お',
+        'ば': 'あ', 'び': 'い', 'ぶ': 'う', 'べ': 'え', 'ぼ': 'お',
+        'ぱ': 'あ', 'ぴ': 'い', 'ぷ': 'う', 'ぺ': 'え', 'ぽ': 'お',
+    }
 
     hiragana_small = "ぁぃぅぇぉっゃゅょ"
     hiragana_large = "あいうえおつやゆよ"
     katakana_small = "ァィゥェォッャュョ"
     katakana_large = "アイウエオツヤユヨ"
 
-    if last_char in hiragana_small:
-        return hiragana_large[hiragana_small.index(last_char)]
-    elif last_char in katakana_small:
-        return katakana_large[katakana_small.index(last_char)]
-    else:
-        return last_char
+  # 「ー」で終わる場合
+    if word[-1] == 'ー':
+        last_char = word[-2]
+        hiragana_char = katakana_to_hiragana(last_char)
 
+        if hiragana_char in consonant_to_vowel:
+            return consonant_to_vowel[hiragana_char]
+        else:
+            return hiragana_char
+
+    # 拗音で終わる場合（例：'しゃ', 'ちゃ', 'にゃ', 'ひゃ', 'みゃ', 'りゃ' など）
+    elif word[-1] in hiragana_small[5:]:  # 拗音部分のみをチェック
+        return hiragana_large[hiragana_small.index(word[-1])]
+
+    # 通常の処理
+    else:
+        last_char = word[-1]
+        if last_char in hiragana_small:
+            return hiragana_large[hiragana_small.index(last_char)]
+        else:
+            return last_char
+            
 def generate_shiritori_response(prompt):
     try:
         response = openai.Completion.create(
