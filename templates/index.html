@@ -53,7 +53,7 @@
             });
         };
 
-        document.getElementById("aiPlayButton").onclick = function() {
+       document.getElementById("aiPlayButton").onclick = function() {
             let word = document.getElementById("wordInput").value;
             fetch('/ai_play', {
                 method: 'POST',
@@ -61,17 +61,19 @@
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({word: word}),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if(data.status === 'success') {
-                    alert("AIの応答: " + data.message);
-                } else {
-                    alert(data.message);
-                }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.status === 'success') {
+                document.getElementById("gameResult").innerText = "AIの応答: " + data.message;
+            } else {
+                // サーバーからのエラーメッセージを表示
+                 alert("エラー: " + data.message);
+                }    
             })
             .catch((error) => {
                 console.error('Error:', error);
+                    alert("通信エラーが発生しました。");
             });
         };
 
