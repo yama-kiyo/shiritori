@@ -6,7 +6,8 @@ app = Flask(__name__)
 
 words_played = []
 
-openai.api_key = os.getenv('OPENAI_API_KEY')
+openai.organization = os.environ.get("OPENAI_ORGANIZATION")
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 def katakana_to_hiragana(word):
     return "".join(chr(ord(char) - 96) if "ァ" <= char <= "ン" else char for char in word)
@@ -32,7 +33,7 @@ def adjust_last_character(word):
 def generate_shiritori_response(prompt):
     try:
         response = openai.Completion.create(
-          engine="curie",  # 使用するエンジンを指定
+          engine="text-davinci-002",  # 使用するエンジンを指定
           prompt=prompt,
           max_tokens=50
         )
