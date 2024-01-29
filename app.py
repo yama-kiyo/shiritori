@@ -67,7 +67,7 @@ def generate_shiritori_response(user_input):
     try:
         # OpenAI APIリクエスト
         response = openai.Completion.create(
-            model="text-davinci-003",
+            model="gpt-3.5-turbo",
             prompt=prompt,
             max_tokens=50
         )
@@ -88,6 +88,9 @@ def play():
     word = request.json.get('word')
     word = katakana_to_hiragana(word)
 
+    if word[-1] == 'ん':
+        return jsonify({"status": "gameover", "message": "GAME OVER"})
+        
     if not words_played:
         words_played.append(word)
         return jsonify({"status": "success", "message": "OK"})
