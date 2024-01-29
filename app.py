@@ -1,20 +1,15 @@
 import traceback
 import os
-import openai
 from flask import Flask, request, jsonify, render_template
+from openai import OpenAI
 
-# 環境変数からAPIキーを取得
-api_key = os.environ.get("OPENAI_API_KEY")
-
-# APIキーを設定
-openai.api_key = api_key
-
+client = OpenAI(
+  api_key=os.environ['OPENAI_API_KEY'],  # this is also the default, it can be omitted
+)
 app = Flask(__name__)
 
 words_played = []
-
 openai.organization = os.environ.get("OPENAI_ORGANIZATION")
-openai.api_key = os.getenv("OPENAI_API_KEY")
 
 def katakana_to_hiragana(word):
     return "".join(chr(ord(char) - 96) if "ァ" <= char <= "ン" else char for char in word)
@@ -67,7 +62,7 @@ def adjust_last_character(word):
             
 def generate_shiritori_response(user_input):
     try:
-        chat_completion = openai.ChatCompletion.create(
+        completion = client.completions.create(
             model="gpt-3.5-turbo",
             messages=[
                 {
