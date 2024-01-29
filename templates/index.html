@@ -12,7 +12,7 @@
         #wordInput {
             margin-top: 20px;
         }
-        #playButton {
+             #playButton, #aiPlayButton {
             margin-left: 10px;
         }
         #gameResult {
@@ -26,6 +26,7 @@
     ここに文字をいれて「プレイ」を押してね<BR>
     <input type="text" id="wordInput" placeholder="ここに単語を入力">
     <button id="playButton">プレイ</button>
+    <button id="aiPlayButton">AIとしりとりする</button>
     <div id="gameResult"></div>
 
     <script>
@@ -42,6 +43,28 @@
             .then(data => {
                 if(data.status === 'success') {
                     document.getElementById("gameResult").innerText = "OK: " + word;
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        };
+
+        document.getElementById("aiPlayButton").onclick = function() {
+            let word = document.getElementById("wordInput").value;
+            fetch('/ai_play', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({word: word}),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.status === 'success') {
+                    alert("AIの応答: " + data.message);
                 } else {
                     alert(data.message);
                 }
