@@ -67,13 +67,15 @@ def generate_shiritori_response(prompt):
           max_tokens=50
         )
         if response is None or not response.choices:
-            print("Error: 応答が空です")
-            return None
+            error_message = "Error: 応答が空です"
+            print(error_message)
+            return jsonify({"status": "error", "message": error_message}), 500
 
         response_text = response.choices[0].text.strip()
         if not response_text:
-            print("Error: 応答テキストが空です")
-            return None
+            error_message = "Error: 応答テキストが空です"
+            print(error_message)
+            return jsonify({"status": "error", "message": error_message}), 500
 
         return response_text
     except Exception as e:
