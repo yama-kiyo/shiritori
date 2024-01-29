@@ -61,17 +61,19 @@ def adjust_last_character(word):
             
 def generate_shiritori_response(prompt):
     try:
-        response = openai.Completion.create(
-          model="gpt-3.5-turbo",  # 使用するモデルを指定
-          prompt=prompt,
-          max_tokens=50
-        )
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": prompt}
+    ]
+)
         if response is None or not response.choices:
             error_message = "Error: 応答が空です"
             print(error_message)
             return jsonify({"status": "error", "message": error_message}), 500
 
-        response_text = response.choices[0].text.strip()
+        response_text = response.choices[0].message['content'].strip()
         if not response_text:
             error_message = "Error: 応答テキストが空です"
             print(error_message)
