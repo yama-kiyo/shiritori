@@ -22,4 +22,4 @@ def play():
         return jsonify({"status": "error", "message": "前の単語の最後の文字と一致しません。"})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=10000)
