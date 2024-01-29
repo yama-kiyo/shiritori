@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, render_template
 import openai
 import os
+import traceback
 
 app = Flask(__name__)
 
@@ -33,13 +34,23 @@ def adjust_last_character(word):
 def generate_shiritori_response(prompt):
     try:
         response = openai.Completion.create(
-          engine="text-davinci-002",  # 使用するエンジンを指定
+          model="gpt-3.5-turbo",  # 使用するモデルを指定
           prompt=prompt,
           max_tokens=50
         )
-        return response.choices[0].text.strip()
+        if response is None or not response.choices:
+            print("Error: 応答が空です")
+            return None
+
+        response_text = response.choices[0].text.strip()
+        if not response_text:
+            print("Error: 応答テキストが空です")
+            return None
+
+        return response_text
     except Exception as e:
         print(f"Error: {e}")
+        traceback.print_exc()
         return None
 
 @app.route('/')
