@@ -9,7 +9,7 @@ client = OpenAI(
 app = Flask(__name__)
 
 words_played = []
-openai.organization = os.environ.get("OPENAI_ORGANIZATION")
+openai.organization = os.environ.get('OPENAI_ORGANIZATION')
 
 def katakana_to_hiragana(word):
     return "".join(chr(ord(char) - 96) if "ァ" <= char <= "ン" else char for char in word)
