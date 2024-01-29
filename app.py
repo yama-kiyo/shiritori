@@ -67,7 +67,7 @@ def generate_shiritori_response(user_input):
     try:
         # OpenAI APIリクエスト
         response = openai.Completion.create(
-            engine="davinci",
+            model="text-davinci-003",
             prompt=prompt,
             max_tokens=50
         )
