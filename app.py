@@ -67,7 +67,7 @@ def adjust_last_character(word):
             
 def generate_shiritori_response(user_input):
     try:
-        response = openai.ChatCompletion.create(
+        chat_completion = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
                 {
@@ -84,6 +84,7 @@ def generate_shiritori_response(user_input):
         return response_text
     except Exception as e:
         print(f"Error: {e}")
+        traceback.print_exc()  # スタックトレースを出力
         return None
 
 @app.route('/')
