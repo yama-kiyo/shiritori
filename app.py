@@ -66,11 +66,13 @@ def generate_shiritori_response(user_input):
 
     try:
         # OpenAI APIリクエスト
-        response = openai.Completion.create(
-            model="gpt-3.5-turbo",
-            prompt=prompt,
-            max_tokens=50
-        )
+        response = openai.ChatCompletion.create(
+    model="gpt-3.5-turbo",
+    messages=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": user_input}
+    ]
+)
         # 応答からテキストを取得
         response_text = response.choices[0].text.strip()
         return response_text
@@ -126,4 +128,4 @@ def reset():
     return jsonify({"message": "しりとりの履歴がリセットされました。"})
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=10000)
+    app.run(debug=False)
