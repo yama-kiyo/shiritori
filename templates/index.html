@@ -42,10 +42,12 @@
             })
             .then(response => response.json())
             .then(data => {
-                if(data.status === 'success') {
-                    document.getElementById("gameResult").innerText = "OK: " + word;
-                } else {
-                    alert(data.message);
+               if(data.status === 'success') {
+                        document.getElementById("gameResult").innerText = "OK: " + word;
+                    } else if(data.status === 'gameover') {
+                        document.getElementById("gameResult").innerText = data.message;
+                    } else {
+                        alert(data.message);
                 }
             })
             .catch((error) => {
