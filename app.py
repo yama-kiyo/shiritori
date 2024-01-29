@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 words_played = []
 
-openai.api_key = os.getenv("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")
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 def katakana_to_hiragana(word):
     return "".join(chr(ord(char) - 96) if "ァ" <= char <= "ン" else char for char in word)
