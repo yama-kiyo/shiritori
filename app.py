@@ -128,4 +128,5 @@ def reset():
     return jsonify({"message": "しりとりの履歴がリセットされました。"})
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True, host='0.0.0.0', port=10000)
+    
