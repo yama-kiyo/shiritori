@@ -122,7 +122,7 @@ def ai_play():
 def reset():
     global words_played
     words_played = []
-    return jsonify({"message": "しりとりの履歴がリセットされました。"}
+return jsonify({"message": "しりとりの履歴がリセットされました。"})
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=10000)
